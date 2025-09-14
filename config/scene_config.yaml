@@ -1,0 +1,57 @@
+# Scene configuration for AirSim navigation environment
+scene_bounds:
+  x_min: -100.0
+  x_max: 100.0
+  y_min: -100.0
+  y_max: 100.0
+  z_min: 2.0
+  z_max: 15.0
+
+obstacles:
+  - type: "box"
+    name: "central_building"
+    center: [0, 0, 5]
+    size: [20, 20, 10]
+    
+  - type: "cylinder" 
+    name: "tower_1"
+    center: [30, 30, 5]
+    radius: 10
+    height: 10
+    
+  - type: "box"
+    name: "building_1"
+    center: [-40, 20, 6]
+    size: [15, 15, 12]
+    
+  - type: "cylinder"
+    name: "tower_2" 
+    center: [-30, -30, 4]
+    radius: 8
+    height: 8
+
+# Target generation parameters
+target_generation:
+  min_distance: 5.0     # Minimum distance from start position
+  max_distance: 50.0    # Maximum distance from start position
+  min_height: 3.0       # Minimum target height
+  max_height: 12.0      # Maximum target height
+  collision_check_samples: 100  # Number of samples for collision checking
+  max_attempts: 50      # Maximum attempts to generate valid target
+
+# Environment parameters
+environment:
+  max_episode_steps: 500
+  collision_threshold: 0.5
+  success_threshold: 3.0  # Success if within 3 meters of target
+  
+# Spawn configuration
+spawn_positions:
+  - position: [0, 0, -2]
+    yaw: 0
+  - position: [10, 10, -2] 
+    yaw: 90
+  - position: [-10, -10, -2]
+    yaw: 180
+  - position: [10, -10, -2]
+    yaw: 270
