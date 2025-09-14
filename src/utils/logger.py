@@ -140,3 +140,17 @@ def setup_training_logger(algorithm: str) -> Logger:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     logger_name = f"{algorithm}_{timestamp}"
     return Logger(logger_name)
+
+
+def setup_logger(config: Dict[str, Any]) -> Logger:
+    """
+    根据配置设置日志器
+    
+    Args:
+        config: 包含算法和其他配置的字典
+        
+    Returns:
+        配置好的日志器实例
+    """
+    algorithm = config.get('algorithm', 'unknown')
+    return setup_training_logger(algorithm)
