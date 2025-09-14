@@ -142,15 +142,26 @@ def setup_training_logger(algorithm: str) -> Logger:
     return Logger(logger_name)
 
 
-def setup_logger(config: Dict[str, Any]) -> Logger:
+def setup_logger(name: str = None, log_file: str = None, level: str = 'INFO', config: Dict[str, Any] = None) -> Logger:
     """
-    根据配置设置日志器
+    设置日志器 - 兼容多种调用方式
     
     Args:
+        name: 日志器名称
+        log_file: 日志文件路径（暂时不使用，保持兼容性）
+        level: 日志级别（暂时不使用，保持兼容性）
         config: 包含算法和其他配置的字典
         
     Returns:
         配置好的日志器实例
     """
-    algorithm = config.get('algorithm', 'unknown')
-    return setup_training_logger(algorithm)
+    if config is not None:
+        # 从配置中获取算法名称
+        algorithm = config.get('algorithm', 'unknown')
+        return setup_training_logger(algorithm)
+    elif name is not None:
+        # 使用提供的名称
+        return Logger(name)
+    else:
+        # 默认使用训练日志器
+        return setup_training_logger('unknown')
