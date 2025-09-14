@@ -252,7 +252,11 @@ def main():
         }
     
     # 创建数据收集器
-    data_collector = DataCollector(str(dirs['results']))
+    data_collector = DataCollector({
+        'output_dir': str(dirs['results']),
+        'collect_detailed_data': args.debug,
+        'save_trajectories': True
+    })
     
     # 训练循环
     logger.info(f"开始训练，共{args.episodes}回合")
