@@ -1,43 +1,43 @@
 # Deep Learning and Reinforcement Learning
 torch>=2.0.0
 torchvision>=0.15.0
-numpy>=1.24.0
+numpy>=1.21.0,<1.25.0
 gymnasium>=0.29.0
 
 # AirSim Integration
 airsim>=1.8.1
-opencv-python>=4.8.0
+opencv-python>=4.5.0,<4.9.0
 
-# Data Processing and Analysis
-pandas>=2.0.0
-scipy>=1.11.0
-scikit-learn>=1.3.0
-h5py>=3.9.0
+# Data Processing and Analysis (Python 3.8 compatible versions)
+pandas>=1.3.0,<2.1.0
+scipy>=1.7.0,<1.11.0
+scikit-learn>=1.0.0,<1.3.0
+h5py>=3.1.0,<3.9.0
 
 # Visualization
-matplotlib>=3.7.0
-seaborn>=0.12.0
-plotly>=5.15.0
+matplotlib>=3.5.0,<3.8.0
+seaborn>=0.11.0,<0.13.0
+plotly>=5.0.0,<5.16.0
 
 # Configuration and Utilities
 pyyaml>=6.0
-jsonschema>=4.17.0
-tqdm>=4.65.0
-click>=8.1.0
+jsonschema>=4.0.0,<4.18.0
+tqdm>=4.60.0,<4.66.0
+click>=8.0.0,<8.2.0
 
 # Logging and Monitoring
-tensorboard>=2.13.0
-wandb>=0.15.0
+tensorboard>=2.8.0,<2.14.0
+wandb>=0.12.0,<0.16.0
 
 # System and File Management
-psutil>=5.9.0
+psutil>=5.8.0,<5.10.0
 pathlib2>=2.3.7
 
 # Development and Testing (Optional)
-pytest>=7.4.0
-pytest-cov>=4.1.0
-black>=23.0.0
-flake8>=6.0.0
+pytest>=6.2.0,<7.5.0
+pytest-cov>=3.0.0,<4.2.0
+black>=22.0.0,<23.1.0
+flake8>=4.0.0,<6.1.0
 
 # Windows specific dependencies
 pywin32>=306; sys_platform == "win32"
