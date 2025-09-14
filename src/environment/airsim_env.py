@@ -27,26 +27,40 @@ class AirSimEnv(gym.Env):
     
     metadata = {'render.modes': ['rgb_array']}
     
-    def __init__(self, config_path: Optional[str] = None, algorithm: str = "ppo"):
+    def __init__(self, config_path: Optional[str] = None, algorithm: str = "ppo", 
+                 config: Optional[Dict[str, Any]] = None, max_episode_steps: Optional[int] = None, 
+                 debug: bool = False):
         """
         初始化AirSim环境
         
         Args:
             config_path: 配置文件路径
             algorithm: 算法名称，用于加载对应配置
+            config: 环境配置字典（可选）
+            max_episode_steps: 最大回合步数（可选，覆盖配置文件）
+            debug: 调试模式（可选）
         """
         super().__init__()
         
+        self.debug = debug
         self.logger = get_logger("airsim_env")
-        self.config_loader = ConfigLoader(config_path)
         
-        # 加载配置
-        self.airsim_config = self.config_loader.load_airsim_settings()
-        self.scene_config = self.config_loader.load_scene_config()
-        self.algorithm_config = self.config_loader.load_algorithm_config(algorithm)
+        # 处理配置
+        if config_path or algorithm != "ppo":
+            # 使用配置文件加载
+            self.config_loader = ConfigLoader(config_path)
+            self.airsim_config = self.config_loader.load_airsim_settings()
+            self.scene_config = self.config_loader.load_scene_config()
+            self.algorithm_config = self.config_loader.load_algorithm_config(algorithm)
+        else:
+            # 使用默认配置加载器
+            self.config_loader = ConfigLoader()
+            self.airsim_config = self.config_loader.load_airsim_settings()
+            self.scene_config = self.config_loader.load_scene_config()
+            self.algorithm_config = self.config_loader.load_algorithm_config(algorithm)
         
-        # 环境配置
-        self.max_episode_steps = self.scene_config['environment']['max_episode_steps']
+        # 环境配置（允许覆盖）
+        self.max_episode_steps = max_episode_steps or self.scene_config['environment']['max_episode_steps']
         self.collision_threshold = self.scene_config['environment']['collision_threshold']
         self.success_threshold = self.scene_config['environment']['success_threshold']
         
