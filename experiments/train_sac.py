@@ -18,7 +18,7 @@ from src.environment.airsim_env import AirSimNavigationEnv
 from src.agents.sac_agent import SACAgent
 from src.utils.logger import setup_logger
 from src.utils.visualization import TrainingVisualizer
-from src.data.data_collection import DataCollector
+from src.data.data_collector import DataCollector
 
 
 def parse_args():
