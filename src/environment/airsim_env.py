@@ -149,13 +149,13 @@ class AirSimEnv(gym.Env):
             spawn_info = spawn_config[spawn_idx]
             
             self.start_position = np.array(spawn_info['position'], dtype=np.float32)
-            start_yaw = spawn_info['yaw']
+            start_yaw = float(spawn_info['yaw'])
             
-            # 移动到起始位置
+            # 移动到起始位置（转换为Python原生类型避免msgpack序列化问题）
             self.client.simSetVehiclePose(
                 airsim.Pose(
-                    airsim.Vector3r(self.start_position[0], self.start_position[1], self.start_position[2]),
-                    airsim.to_quaternion(0, 0, np.radians(start_yaw))
+                    airsim.Vector3r(float(self.start_position[0]), float(self.start_position[1]), float(self.start_position[2])),
+                    airsim.to_quaternion(0.0, 0.0, float(np.radians(start_yaw)))
                 ),
                 True,
                 self.vehicle_name
