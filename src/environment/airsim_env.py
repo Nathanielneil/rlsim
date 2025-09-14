@@ -582,3 +582,7 @@ class AirSimEnv(gym.Env):
         }
         
         return statistics
+
+
+# 为向后兼容性添加别名
+AirSimNavigationEnv = AirSimEnv
