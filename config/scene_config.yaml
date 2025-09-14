@@ -33,9 +33,9 @@ obstacles:
 # Target generation parameters
 target_generation:
   min_distance: 5.0     # Minimum distance from start position
-  max_distance: 50.0    # Maximum distance from start position
-  min_height: 3.0       # Minimum target height
-  max_height: 12.0      # Maximum target height
+  max_distance: 30.0    # Maximum distance from start position
+  min_height: -10.0     # Minimum target height (AirSim uses negative Z for altitude)
+  max_height: -3.0      # Maximum target height (AirSim uses negative Z for altitude)
   collision_check_samples: 100  # Number of samples for collision checking
   max_attempts: 50      # Maximum attempts to generate valid target
 

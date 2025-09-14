@@ -250,6 +250,10 @@ class AirSimEnv(gym.Env):
         # 通过动作空间处理器处理动作
         velocity_command = self.action_space_handler.process_action(action)
         
+        # 确保velocity_command是numpy数组
+        if not isinstance(velocity_command, np.ndarray):
+            velocity_command = np.array(velocity_command, dtype=np.float32)
+        
         # 执行速度控制
         self.client.moveByVelocityZAsync(
             vx=float(velocity_command[0]),
