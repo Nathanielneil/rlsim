@@ -197,6 +197,7 @@ def main():
     try:
         logger.info("初始化AirSim环境...")
         env = AirSimNavigationEnv(
+            algorithm='dqn',
             config=config.get('env_config', {}),
             max_episode_steps=args.max_episode_steps,
             debug=args.debug
