@@ -245,6 +245,11 @@ class PPONetwork(nn.Module):
             action_mean = self.actor['mean'](shared_features)
             log_std = self.actor['log_std'][0]
             action_std = torch.exp(log_std)
+            
+            # 确保标准差与均值维度匹配
+            if action_std.dim() == 1 and action_mean.dim() == 2:
+                action_std = action_std.unsqueeze(0).expand_as(action_mean)
+            
             action_dist = Normal(action_mean, action_std)
         else:
             # 离散动作
@@ -351,7 +356,10 @@ class PPOAgent(BaseAgent):
                 action = action_dist.sample()
             
             # 计算对数概率
-            log_prob = action_dist.log_prob(action).sum(dim=-1) if isinstance(action_dist, Normal) else action_dist.log_prob(action)
+            if isinstance(action_dist, Normal):
+                log_prob = action_dist.log_prob(action).sum(dim=-1)
+            else:
+                log_prob = action_dist.log_prob(action)
         
         # 存储信息到缓冲区
         if not deterministic:
