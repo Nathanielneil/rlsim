@@ -97,10 +97,17 @@ class PPONetwork(nn.Module):
     
     def _build_image_encoder(self) -> nn.Module:
         """构建图像编码器"""
-        # CNN for processing images
+        # 创建一个模块字典来处理不同通道数的图像
+        return nn.ModuleDict({
+            'rgb_encoder': self._build_cnn_encoder(3),      # RGB: 3 channels
+            'depth_encoder': self._build_cnn_encoder(1),    # Depth: 1 channel  
+            'seg_encoder': self._build_cnn_encoder(3)       # Segmentation: 3 channels
+        })
+    
+    def _build_cnn_encoder(self, in_channels: int) -> nn.Module:
+        """构建CNN编码器"""
         return nn.Sequential(
-            # RGB branch: 3 x 224 x 224
-            nn.Conv2d(3, 32, kernel_size=8, stride=4, padding=2),
+            nn.Conv2d(in_channels, 32, kernel_size=8, stride=4, padding=2),
             self.activation_fn(),
             nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1),
             self.activation_fn(),
@@ -194,9 +201,12 @@ class PPONetwork(nn.Module):
             
             # 处理所有图像类型
             image_features = []
+            encoder_map = {'rgb': 'rgb_encoder', 'depth': 'depth_encoder', 'segmentation': 'seg_encoder'}
+            
             for img_type in ['rgb', 'depth', 'segmentation']:
                 if img_type in images:
-                    img_feat = self.image_encoder(images[img_type])
+                    encoder_name = encoder_map[img_type]
+                    img_feat = self.image_encoder[encoder_name](images[img_type])
                     image_features.append(img_feat)
             
             # 合并所有图像特征
@@ -217,7 +227,7 @@ class PPONetwork(nn.Module):
                 rgb = observations.get('rgb', list(observations.values())[0])
             else:
                 rgb = observations
-            features = self.image_encoder(rgb)
+            features = self.image_encoder['rgb_encoder'](rgb)
         
         return features
     
