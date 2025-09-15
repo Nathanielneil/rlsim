@@ -49,8 +49,8 @@ class PPONetwork(nn.Module):
             self.state_encoder = self._build_state_encoder(observation_space['state'].shape[0])
             
             # 计算特征维度
-            image_features = 512  # 图像编码器输出维度
-            state_features = self.net_arch[0] // 2
+            image_features = 512 * 3  # RGB, depth, segmentation 各512维
+            state_features = observation_space['state'].shape[0]  # 状态维度
             self.feature_dim = image_features + state_features
             
         elif self.observation_type == 'state':
@@ -191,12 +191,20 @@ class PPONetwork(nn.Module):
         if self.observation_type == 'mixed':
             # 处理图像
             images = observations['images']
-            rgb_features = images['rgb'] if isinstance(images, dict) else images
-            image_encoded = self.image_encoder(rgb_features)
             
-            # 处理状态
+            # 处理所有图像类型
+            image_features = []
+            for img_type in ['rgb', 'depth', 'segmentation']:
+                if img_type in images:
+                    img_feat = self.image_encoder(images[img_type])
+                    image_features.append(img_feat)
+            
+            # 合并所有图像特征
+            image_encoded = torch.cat(image_features, dim=-1) if image_features else torch.zeros((observations['state'].shape[0], 512*3), device=observations['state'].device)
+            
+            # 处理状态 (直接使用状态向量)
             state = observations['state']
-            state_encoded = self.state_encoder(state)
+            state_encoded = state
             
             # 合并特征
             features = torch.cat([image_encoded, state_encoded], dim=-1)
